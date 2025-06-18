@@ -33,7 +33,7 @@ export const TodoItem: FC<TodoItemProps> = ({
     setNewTitle(event.target.value.trimStart());
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     const trimmedTitle = newTitle.trim();
@@ -50,8 +50,12 @@ export const TodoItem: FC<TodoItemProps> = ({
       return;
     }
 
-    onUpdateTodo(todo.id, trimmedTitle);
-    setIsEditing(false);
+    try {
+      await onUpdateTodo(todo.id, trimmedTitle);
+      setIsEditing(false); // скрыть форму только если обновление прошло успешно
+    } catch (error) {
+      setIsEditing(true);
+    }
   };
 
   const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -94,6 +98,7 @@ export const TodoItem: FC<TodoItemProps> = ({
             onChange={handleTitleChange}
             onBlur={handleSubmit}
             onKeyUp={handleKeyUp}
+            autoFocus
           />
         </form>
       ) : (
