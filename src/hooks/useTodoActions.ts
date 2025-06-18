@@ -5,9 +5,9 @@ import { ErrorMessages } from '../enums/ErrorMessages';
 
 export const useTodoActions = (
   setTodos: React.Dispatch<React.SetStateAction<Todo[]>>,
-  setErrorMessage: React.Dispatch<React.SetStateAction<ErrorMessages | null>>,
   setTempTodo: React.Dispatch<React.SetStateAction<Todo | null>>,
 ) => {
+  const [errorMessage, setErrorMessage] = useState<ErrorMessages | null>(null);
   const [processingTodoIds, setProcessingTodoIds] = useState<Todo['id'][]>([]);
   const [isTodoSubmitting, setIsTodoSubmitting] = useState(false);
 
@@ -244,5 +244,7 @@ export const useTodoActions = (
     isTodoSubmitting,
     isAllTodosCompleted,
     onUpdateTodo,
+    errorMessage,
+    setErrorMessage,
   };
 };

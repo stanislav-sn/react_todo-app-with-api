@@ -52,7 +52,7 @@ export const TodoItem: FC<TodoItemProps> = ({
 
     try {
       await onUpdateTodo(todo.id, trimmedTitle);
-      setIsEditing(false); // скрыть форму только если обновление прошло успешно
+      setIsEditing(false);
     } catch (error) {
       setIsEditing(true);
     }

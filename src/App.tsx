@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Header } from './components/Header';
 import { TodoList } from './components/TodoList';
 import { Footer } from './components/Footer';
@@ -14,12 +14,9 @@ import { useTodoActions } from './hooks/useTodoActions';
 
 export const App: FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [todosLoading, setTodosLoading] = useState(true);
+  const [todosLoading, setTodosLoading] = useState(false);
   const [filter, setFilter] = useState<FilterType>(FilterType.All);
-  const [errorMessage, setErrorMessage] = useState<ErrorMessages | null>(null);
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
-
-  const handleHideError = useCallback(() => setErrorMessage(null), []);
 
   const {
     processingTodoIds,
@@ -31,11 +28,15 @@ export const App: FC = () => {
     toggleStatusTodos,
     isAllTodosCompleted,
     onUpdateTodo,
-  } = useTodoActions(setTodos, setErrorMessage, setTempTodo);
+    errorMessage,
+    setErrorMessage,
+  } = useTodoActions(setTodos, setTempTodo);
 
   useEffect(() => {
     const fetchTodos = async () => {
       try {
+        setTodosLoading(true);
+        setErrorMessage(null);
         const todosFromServer = await getTodos();
 
         setTodos(todosFromServer);
@@ -47,7 +48,7 @@ export const App: FC = () => {
     };
 
     fetchTodos();
-  }, []);
+  }, [setErrorMessage]);
 
   if (!USER_ID) {
     return <UserWarning />;
@@ -92,7 +93,7 @@ export const App: FC = () => {
 
       <ErrorNotification
         errorMessage={errorMessage}
-        onHideError={handleHideError}
+        onHideError={setErrorMessage}
       />
     </div>
   );
