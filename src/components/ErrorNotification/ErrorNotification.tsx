@@ -6,7 +6,7 @@ const ERROR_DURATION = 3000;
 
 interface ErrorNotificationProps {
   errorMessage: ErrorMessages | null;
-  onHideError: React.Dispatch<React.SetStateAction<ErrorMessages | null>>;
+  onHideError: () => void;
 }
 
 export const ErrorNotification: FC<ErrorNotificationProps> = ({
@@ -16,7 +16,7 @@ export const ErrorNotification: FC<ErrorNotificationProps> = ({
   useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => {
-        onHideError(ErrorMessages.None);
+        onHideError();
       }, ERROR_DURATION);
 
       return () => clearTimeout(timer);
@@ -37,7 +37,7 @@ export const ErrorNotification: FC<ErrorNotificationProps> = ({
         data-cy="HideErrorButton"
         type="button"
         className="delete"
-        onClick={() => onHideError(ErrorMessages.None)}
+        onClick={() => onHideError()}
       />
       {errorMessage}
     </div>

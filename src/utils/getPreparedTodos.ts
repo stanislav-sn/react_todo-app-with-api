@@ -1,9 +1,7 @@
 import { FilterType } from '../types/FilterType';
+import { Todo } from '../types/Todo';
 
-export function getPreparedTodos<T extends { completed: boolean }>(
-  todos: T[],
-  filter: FilterType,
-): T[] {
+export function getPreparedTodos(todos: Todo[], filter: FilterType): Todo[] {
   return todos.filter(todo => {
     switch (filter) {
       case FilterType.Active:

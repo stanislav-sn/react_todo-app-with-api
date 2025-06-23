@@ -1,26 +1,28 @@
 import { useCallback, useState } from 'react';
 import { deleteTodo, updateTodo, postTodo, USER_ID } from '../api/todos';
-import { Todo } from '../types/Todo';
 import { ErrorMessages } from '../enums/ErrorMessages';
+import { Todo } from '../types/Todo';
+import { FilterType } from '../types/FilterType';
 
-export const useTodoActions = (
-  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>,
-  setTempTodo: React.Dispatch<React.SetStateAction<Todo | null>>,
-) => {
+export const useTodoActions = () => {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todosLoading, setTodosLoading] = useState(false);
+  const [filter, setFilter] = useState<FilterType>(FilterType.All);
+  const [tempTodo, setTempTodo] = useState<Todo | null>(null);
   const [errorMessage, setErrorMessage] = useState<ErrorMessages | null>(null);
-  const [processingTodoIds, setProcessingTodoIds] = useState<Todo['id'][]>([]);
+  const [processingTodoIds, setProcessingTodoIds] = useState<number[]>([]);
   const [isTodoSubmitting, setIsTodoSubmitting] = useState(false);
 
-  const addToProcessing = (ids: Todo['id'][]) => {
+  const addToProcessing = (ids: number[]) => {
     setProcessingTodoIds(prev => [...prev, ...ids]);
   };
 
-  const removeFromProcessing = (ids: Todo['id'][]) => {
+  const removeFromProcessing = (ids: number[]) => {
     setProcessingTodoIds(prev => prev.filter(id => !ids.includes(id)));
   };
 
-  const isAllTodosCompleted = useCallback((todos: Todo[]) => {
-    return todos.every(todo => todo.completed);
+  const isAllTodosCompleted = useCallback((todoList: Todo[]) => {
+    return todoList.every(todo => todo.completed);
   }, []);
 
   const addNewTodo = useCallback(
@@ -68,7 +70,7 @@ export const useTodoActions = (
   );
 
   const deleteSingleTodo = useCallback(
-    async (todoId: Todo['id']) => {
+    async (todoId: number) => {
       addToProcessing([todoId]);
 
       try {
@@ -85,7 +87,7 @@ export const useTodoActions = (
   );
 
   const deleteCompletedTodos = useCallback(
-    async (completedIds: Todo['id'][]) => {
+    async (completedIds: number[]) => {
       if (completedIds.length === 0) {
         return;
       }
@@ -126,7 +128,7 @@ export const useTodoActions = (
   );
 
   const toggleStatusSingleTodo = useCallback(
-    async (todoId: Todo['id'], completed: boolean) => {
+    async (todoId: number, completed: boolean) => {
       addToProcessing([todoId]);
 
       try {
@@ -148,10 +150,10 @@ export const useTodoActions = (
   );
 
   const toggleStatusTodos = useCallback(
-    async (todos: Todo[]) => {
-      const shouldComplete = !isAllTodosCompleted(todos);
+    async (todoList: Todo[]) => {
+      const shouldComplete = !isAllTodosCompleted(todoList);
 
-      const todosToUpdate = todos.filter(
+      const todosToUpdate = todoList.filter(
         todo => todo.completed !== shouldComplete,
       );
       const todoIds = todosToUpdate.map(todo => todo.id);
@@ -235,6 +237,13 @@ export const useTodoActions = (
   );
 
   return {
+    todos,
+    setTodos,
+    todosLoading,
+    setTodosLoading,
+    filter,
+    setFilter,
+    tempTodo,
     processingTodoIds,
     deleteSingleTodo,
     deleteCompletedTodos,

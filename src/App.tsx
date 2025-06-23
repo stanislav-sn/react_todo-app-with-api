@@ -1,24 +1,24 @@
 /* eslint-disable max-len */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect } from 'react';
+import { getTodos, USER_ID } from './api/todos';
+import { ErrorMessages } from './enums/ErrorMessages';
+import { useTodoActions } from './hooks/useTodoActions';
 import { Header } from './components/Header';
 import { TodoList } from './components/TodoList';
 import { Footer } from './components/Footer';
 import { ErrorNotification } from './components/ErrorNotification';
 import { UserWarning } from './UserWarning';
-import { getTodos, USER_ID } from './api/todos';
-import { Todo } from './types/Todo';
-import { FilterType } from './types/FilterType';
-import { ErrorMessages } from './enums/ErrorMessages';
-import { useTodoActions } from './hooks/useTodoActions';
 
 export const App: FC = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [todosLoading, setTodosLoading] = useState(false);
-  const [filter, setFilter] = useState<FilterType>(FilterType.All);
-  const [tempTodo, setTempTodo] = useState<Todo | null>(null);
-
   const {
+    todos,
+    setTodos,
+    todosLoading,
+    setTodosLoading,
+    filter,
+    setFilter,
+    tempTodo,
     processingTodoIds,
     deleteSingleTodo,
     deleteCompletedTodos,
@@ -30,7 +30,7 @@ export const App: FC = () => {
     onUpdateTodo,
     errorMessage,
     setErrorMessage,
-  } = useTodoActions(setTodos, setTempTodo);
+  } = useTodoActions();
 
   useEffect(() => {
     const fetchTodos = async () => {
@@ -48,6 +48,10 @@ export const App: FC = () => {
     };
 
     fetchTodos();
+  }, [setErrorMessage, setTodos, setTodosLoading]);
+
+  const handleHideError = useCallback(() => {
+    setErrorMessage(ErrorMessages.None);
   }, [setErrorMessage]);
 
   if (!USER_ID) {
@@ -93,7 +97,7 @@ export const App: FC = () => {
 
       <ErrorNotification
         errorMessage={errorMessage}
-        onHideError={setErrorMessage}
+        onHideError={handleHideError}
       />
     </div>
   );

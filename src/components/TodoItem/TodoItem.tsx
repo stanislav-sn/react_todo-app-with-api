@@ -4,10 +4,10 @@ import { Todo } from '../../types/Todo';
 
 interface TodoItemProps {
   todo: Todo;
-  onDeleteTodo: (todoId: Todo['id']) => void;
+  onDeleteTodo: (todoId: number) => void;
   isLoading: boolean;
   onToggleStatusSingleTodo: (
-    todoId: Todo['id'],
+    todoId: number,
     completed: boolean,
   ) => Promise<void>;
   onUpdateTodo: (todoId: number, title: string) => Promise<void>;

@@ -15,10 +15,10 @@ export const postTodo = ({ title, userId }: Omit<Todo, 'id' | 'completed'>) => {
   });
 };
 
-export const deleteTodo = (todoId: Todo['id']) => {
+export const deleteTodo = (todoId: number) => {
   return client.delete(`/todos/${todoId}`);
 };
 
-export const updateTodo = (todoId: Todo['id'], body: Partial<Todo>) => {
+export const updateTodo = (todoId: number, body: Partial<Todo>) => {
   return client.patch<Todo>(`/todos/${todoId}`, body);
 };

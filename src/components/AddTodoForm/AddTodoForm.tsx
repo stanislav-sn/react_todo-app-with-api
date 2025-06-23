@@ -2,7 +2,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { Todo } from '../../types/Todo';
 
 interface AddTodoFormProps {
-  processingTodoIds: Todo['id'][];
+  processingTodoIds: number[];
   addNewTodo: (title: string) => Promise<void>;
   isTodoSubmitting: boolean;
 }

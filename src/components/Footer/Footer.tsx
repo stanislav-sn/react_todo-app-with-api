@@ -17,7 +17,7 @@ export const Footer: FC<FooterProps> = ({
   setFilter,
   onDeleteCompleted,
 }) => {
-  const countActiveTodos = getActiveItems<Todo>(todos);
+  const numberActiveTodos = getActiveItems<Todo>(todos);
   const completedTodos = getCompletedItems<Todo>(todos);
 
   const handleDeleteCompletedTodo = useCallback(() => {
@@ -27,7 +27,7 @@ export const Footer: FC<FooterProps> = ({
   return (
     <footer className="todoapp__footer" data-cy="Footer">
       <span className="todo-count" data-cy="TodosCounter">
-        {countActiveTodos} items left
+        {numberActiveTodos} items left
       </span>
 
       <nav className="filter" data-cy="Filter">

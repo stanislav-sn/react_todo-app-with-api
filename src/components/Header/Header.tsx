@@ -5,7 +5,7 @@ import classNames from 'classnames';
 
 interface HeaderProps {
   todos: Todo[];
-  processingTodoIds: Todo['id'][];
+  processingTodoIds: number[];
   addNewTodo: (title: string) => Promise<void>;
   isTodoSubmitting: boolean;
   onToggleStatusTodos: (todos: Todo[]) => Promise<void>;
