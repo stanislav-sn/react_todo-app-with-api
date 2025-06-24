@@ -1,5 +1,4 @@
 import { FC, useEffect, useRef, useState } from 'react';
-import { Todo } from '../../types/Todo';
 
 interface AddTodoFormProps {
   processingTodoIds: number[];
